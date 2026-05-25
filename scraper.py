@@ -2,7 +2,7 @@ import requests
 
 SWIGGY_API = "https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=19.2098601&lng=72.8403975&restaurantId=30906&catalog_qa=undefined&submitAction=ENTER"
 SWIGGY_URL = "https://www.swiggy.com/city/mumbai/natural-ice-cream-mahavir-nagar-kandivali-west-rest30906"
-PRODUCT_KEYWORD = "coffee crunch"
+PRODUCT_KEYWORD = "Coffee Fudge"
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
