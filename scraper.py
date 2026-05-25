@@ -1,41 +1,33 @@
-from playwright.sync_api import sync_playwright
-import time
+import requests
+from bs4 import BeautifulSoup
 
 ZOMATO_URL = "https://www.zomato.com/mumbai/naturals-ice-cream-YOUR-BRANCH"
 PRODUCT_KEYWORD = "coffee crunch"
 
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Accept": "text/html,application/xhtml+xml,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+}
 
 def check_product_availability():
-    print("Opening Zomato...")
+    print("Checking Zomato...")
+    try:
+        response = requests.get(ZOMATO_URL, headers=HEADERS, timeout=15)
+        soup = BeautifulSoup(response.text, "html.parser")
+        page_text = soup.get_text().lower()
 
-    with sync_playwright() as p:
-        browser = p.chromium.launch(
-            headless=True,
-            args=["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu", "--single-process"]
-        )
-        page = browser.new_page()
-
-        try:
-            page.goto(ZOMATO_URL, timeout=30000)
-            page.wait_for_load_state("networkidle", timeout=20000)
-            time.sleep(3)
-
-            page_text = page.inner_text("body").lower()
-
-            if PRODUCT_KEYWORD in page_text:
-                if "out of stock" not in page_text:
-                    print("Found it and it's in stock!")
-                    return True, "Naturals Ice Cream", ZOMATO_URL
-                else:
-                    print("Found but out of stock.")
-                    return False, None, None
+        if PRODUCT_KEYWORD in page_text:
+            if "out of stock" not in page_text:
+                print("Found and in stock!")
+                return True, "Naturals Ice Cream", ZOMATO_URL
             else:
-                print("Not found on page.")
+                print("Found but out of stock.")
                 return False, None, None
-
-        except Exception as e:
-            print(f"Error: {e}")
+        else:
+            print("Not found yet.")
             return False, None, None
 
-        finally:
-            browser.close()
+    except Exception as e:
+        print(f"Error: {e}")
+        return False, None, None
