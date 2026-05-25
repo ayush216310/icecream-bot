@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 
 ZOMATO_URL = "https://www.zomato.com/mumbai/natural-ice-cream-kandivali-west"
-PRODUCT_KEYWORD = "coffee crunch"
+PRODUCT_KEYWORD = "Coffee Fudge Crunch Ice Cream"
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
