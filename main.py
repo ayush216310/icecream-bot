@@ -3,7 +3,7 @@ import time
 from scraper import check_product_availability
 from notifier import alert_user
 
-PRODUCT_NAME = "Coffee Crunch x Bombay Sweet Shop"
+PRODUCT_NAME = "Coffee Fudge Crunch Ice Cream"
 
 already_notified = False
 
