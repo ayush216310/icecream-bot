@@ -1,31 +1,31 @@
 import requests
-from bs4 import BeautifulSoup
 
-ZOMATO_URL = "https://www.zomato.com/mumbai/natural-ice-cream-kandivali-west"
-PRODUCT_KEYWORD = "Coffee Fudge Crunch Ice Cream"
+SWIGGY_API = "https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=19.2098601&lng=72.8403975&restaurantId=30906&catalog_qa=undefined&submitAction=ENTER"
+SWIGGY_URL = "https://www.swiggy.com/city/mumbai/natural-ice-cream-mahavir-nagar-kandivali-west-rest30906"
+PRODUCT_KEYWORD = "coffee crunch"
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Accept": "application/json, text/plain, */*",
     "Accept-Language": "en-US,en;q=0.9",
-    "Accept": "text/html,application/xhtml+xml,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Referer": "https://www.swiggy.com/",
+    "Origin": "https://www.swiggy.com",
 }
 
 def check_product_availability():
-    print("Checking Zomato...")
+    print("Checking Swiggy API...")
     try:
-        response = requests.get(ZOMATO_URL, headers=HEADERS, timeout=15)
-        soup = BeautifulSoup(response.text, "html.parser")
-        page_text = soup.get_text().lower()
+        response = requests.get(SWIGGY_API, headers=HEADERS, timeout=15)
+        data = response.json()
 
-        if PRODUCT_KEYWORD in page_text:
-            if "out of stock" not in page_text:
-                print("Found and in stock!")
-                return True, "Naturals Ice Cream", ZOMATO_URL
-            else:
-                print("Found but out of stock.")
-                return False, None, None
+        # Convert entire menu JSON to lowercase text and search
+        menu_text = str(data).lower()
+
+        if PRODUCT_KEYWORD in menu_text:
+            print("Coffee Crunch found!")
+            return True, "Naturals Ice Cream Kandivali West", SWIGGY_URL
         else:
-            print("Not found yet.")
+            print("Coffee Crunch not found yet.")
             return False, None, None
 
     except Exception as e:
