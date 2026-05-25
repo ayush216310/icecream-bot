@@ -1,4 +1,8 @@
 import requests
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 SWIGGY_API = "https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=19.2098601&lng=72.8403975&restaurantId=30906&catalog_qa=undefined&submitAction=ENTER"
 SWIGGY_URL = "https://www.swiggy.com/city/mumbai/natural-ice-cream-mahavir-nagar-kandivali-west-rest30906"
@@ -10,22 +14,25 @@ HEADERS = {
     "Accept-Language": "en-US,en;q=0.9",
     "Referer": "https://www.swiggy.com/",
     "Origin": "https://www.swiggy.com",
+    "cookie": os.getenv("SWIGGY_COOKIE", ""),
 }
+
 
 def check_product_availability():
     print("Checking Swiggy API...")
     try:
         response = requests.get(SWIGGY_API, headers=HEADERS, timeout=15)
-        data = response.json()
+        print(f"Status code: {response.status_code}")
+        print(f"Response preview: {response.text[:200]}")
 
-        # Convert entire menu JSON to lowercase text and search
+        data = response.json()
         menu_text = str(data).lower()
 
         if PRODUCT_KEYWORD in menu_text:
-            print("Coffee Crunch found!")
+            print("Coffee Fudge Crunch found!")
             return True, "Naturals Ice Cream Kandivali West", SWIGGY_URL
         else:
-            print("Coffee Crunch not found yet.")
+            print("Not found yet.")
             return False, None, None
 
     except Exception as e:
