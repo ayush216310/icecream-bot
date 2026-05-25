@@ -23,10 +23,11 @@ def send_email_alert(product_name, store_name, order_link):
         msg["Subject"] = subject
         msg.attach(MIMEText(body, "plain"))
 
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+        with smtplib.SMTP("smtp.gmail.com", 587) as server:
+            server.ehlo()
+            server.starttls()
             server.login(sender, password)
             server.sendmail(sender, receiver, msg.as_string())
-        print("Email sent!")
 
     except Exception as e:
         print(f"EMAIL ERROR: {e}")
