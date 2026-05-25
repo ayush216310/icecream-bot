@@ -1,38 +1,27 @@
 import requests
-import os
-from dotenv import load_dotenv
+from bs4 import BeautifulSoup
 
-load_dotenv()
-
-SWIGGY_API = "https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=19.2098601&lng=72.8403975&restaurantId=30906&catalog_qa=undefined&submitAction=ENTER"
-SWIGGY_URL = "https://www.swiggy.com/city/mumbai/natural-ice-cream-mahavir-nagar-kandivali-west-rest30906"
+NATURALS_URL = "https://order.naturalicecreams.in/order_summary/95b154d8-582f-11f1-900f-7ec616ec9418?ZDX0E=1"
 PRODUCT_KEYWORD = "coffee fudge crunch"
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-    "Accept": "application/json, text/plain, */*",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
     "Accept-Language": "en-US,en;q=0.9",
-    "Referer": "https://www.swiggy.com/",
-    "Origin": "https://www.swiggy.com",
-    "cookie": os.getenv("SWIGGY_COOKIE", ""),
 }
 
-
 def check_product_availability():
-    print("Checking Swiggy API...")
+    print("Checking Naturals website...")
     try:
-        response = requests.get(SWIGGY_API, headers=HEADERS, timeout=15)
-        print(f"Status code: {response.status_code}")
-        print(f"Response preview: {response.text[:200]}")
+        response = requests.get(NATURALS_URL, headers=HEADERS, timeout=15)
+        soup = BeautifulSoup(response.text, "html.parser")
+        page_text = soup.get_text().lower()
 
-        data = response.json()
-        menu_text = str(data).lower()
-
-        if PRODUCT_KEYWORD in menu_text:
-            print("Coffee Fudge Crunch found!")
-            return True, "Naturals Ice Cream Kandivali West", SWIGGY_URL
+        if PRODUCT_KEYWORD in page_text:
+            print("Coffee Fudge Crunch found on Naturals!")
+            return True, "Naturals Ice Cream Mahavir Nagar", NATURALS_URL
         else:
-            print("Not found yet.")
+            print("Coffee Fudge Crunch not listed yet.")
             return False, None, None
 
     except Exception as e:
