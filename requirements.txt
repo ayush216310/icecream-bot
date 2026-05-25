@@ -1,7 +1,6 @@
 requests
 beautifulsoup4
-selenium
+playwright
 schedule
 twilio
 python-dotenv
-webdriver-manager

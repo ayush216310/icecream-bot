@@ -1,0 +1,6 @@
+services:
+  - type: worker
+    name: icecream-bot
+    env: python
+    buildCommand: bash build.sh
+    startCommand: python main.py
